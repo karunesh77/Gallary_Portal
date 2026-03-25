@@ -9,10 +9,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const clerkKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
-if (!clerkKey) {
-  throw new Error("Missing REACT_APP_CLERK_PUBLISHABLE_KEY in .env");
-}
-
 function App() {
   return (
     <ClerkProvider publishableKey={clerkKey}>
