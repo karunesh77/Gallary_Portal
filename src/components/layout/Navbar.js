@@ -1,7 +1,12 @@
-import { NavLink } from "react-router-dom";
-import { Image, Shield } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Image, Shield, LogIn } from "lucide-react";
+import { useAuth } from "@clerk/clerk-react";
+import UserMenu from "../auth/UserMenu";
 
 export default function Navbar() {
+  const { isSignedIn } = useAuth();
+  const navigate = useNavigate();
+
   const link =
     "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors";
   const active = "bg-white text-gray-900 shadow-sm";
@@ -13,26 +18,44 @@ export default function Navbar() {
         <span className="text-lg font-semibold tracking-tight">
           Gallery Portal
         </span>
-        <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `${link} ${isActive ? active : idle}`
-            }
-          >
-            <Image size={16} />
-            Gallery
-          </NavLink>
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              `${link} ${isActive ? active : idle}`
-            }
-          >
-            <Shield size={16} />
-            Admin
-          </NavLink>
+
+        <div className="flex items-center gap-4">
+          <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `${link} ${isActive ? active : idle}`
+              }
+            >
+              <Image size={16} />
+              Gallery
+            </NavLink>
+
+            {isSignedIn && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `${link} ${isActive ? active : idle}`
+                }
+              >
+                <Shield size={16} />
+                Admin
+              </NavLink>
+            )}
+          </div>
+
+          {isSignedIn ? (
+            <UserMenu />
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+            >
+              <LogIn size={16} />
+              Login
+            </button>
+          )}
         </div>
       </div>
     </nav>
